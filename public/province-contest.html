@@ -351,11 +351,6 @@
                 </div>
             </div>
         </section>
-         <div style="text-align: center; margin-top: 40px;">
-            <a href="index.html" style="display: inline-block; background-color: var(--primary-color); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: background-color 0.3s;">
-                ← กลับหน้าแรก
-            </a>
-        </div>
     </main>
 
     <!-- Modal: ฟอร์มอัปโหลดไฟล์ -->
@@ -365,7 +360,7 @@
                 <button class="modal-close-btn">&times;</button>
                 <header class="form-header">
                     <h1 id="modal-title"></h1>
-                    <p>ส่งผลงานภายในวันที่ 29 กรกฎาคม พ.ศ. 2568</p>
+                    <p>ส่งผลงานภายในวันที่ 25 กรกฎาคม พ.ศ. 2568</p>
                 </header>
                 <form id="upload-form" novalidate>
                     <input type="hidden" id="competition-type" name="competition_type">
@@ -404,11 +399,13 @@
                     </div>
                     <div class="form-group">
                         <label for="area-office">สำนักงานเขตพื้นที่ <span class="required">*</span></label>
+                        <!-- --- จุดที่แก้ไข: เพิ่มตัวเลือก "สังกัดโรงเรียนเอกชน" --- -->
                         <select id="area-office" name="area_office" class="input-field" required>
                             <option value="" disabled selected>-- กรุณาเลือกเขตพื้นที่ --</option>
                             <option value="สพป.ร้อยเอ็ด เขต 1">สพป.ร้อยเอ็ด เขต 1</option>
                             <option value="สพป.ร้อยเอ็ด เขต 2">สพป.ร้อยเอ็ด เขต 2</option>
                             <option value="สพป.ร้อยเอ็ด เขต 3">สพป.ร้อยเอ็ด เขต 3</option>
+                            <option value="สังกัดโรงเรียนเอกชน">สังกัดโรงเรียนเอกชน</option>
                         </select>
                     </div>
                      <div class="form-group">
@@ -436,6 +433,7 @@
     
     <script>
     document.addEventListener('DOMContentLoaded', function() {
+        // --- URL สำหรับส่งข้อมูลฟอร์ม และดึงข้อมูล ---
         const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzU2U_Tn8dZJhCmuly2VFKdTU4bwbqA9wU4HVCaQ8MdtzLmFVo-sdk7p5cSoi1FjHQZ/exec"; 
         
         let allSubmissions = [];
@@ -559,7 +557,8 @@
                         Swal.fire('อัปโหลดสำเร็จ!', `ไฟล์ของคุณถูกบันทึกแล้ว`, 'success');
                         uploadModal.classList.remove('active');
                         resetUploadState();
-                        fetchAndDisplaySubmissions();
+                        // โหลดข้อมูลใหม่หลังจากอัปเดตสำเร็จ
+                        fetchAndDisplaySubmissions(); 
                     } else {
                         throw new Error(result.message || 'เกิดข้อผิดพลาดที่ไม่รู้จัก');
                     }
@@ -581,6 +580,7 @@
             directorTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">กำลังโหลดข้อมูล...</td></tr>';
 
             try {
+                // --- จุดที่แก้ไข: ดึงข้อมูลจาก SCRIPT_URL โดยตรง ---
                 const response = await fetch(SCRIPT_URL);
                 if (!response.ok) throw new Error(`เกิดข้อผิดพลาดในการดึงข้อมูล: ${response.statusText}`);
 
@@ -683,5 +683,10 @@
         fetchAndDisplaySubmissions();
     });
     </script>
+    <div class="mb-4">
+                <a href="index.html" class="btn btn-outline-secondary">
+                  <i class="bi bi-arrow-left"></i> <center>ย้อนกลับไปหน้าหลัก</center>
+                </a>
+                </div>
 </body>
 </html>
