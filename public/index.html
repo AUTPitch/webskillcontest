@@ -1,89 +1,296 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Welcome to Firebase Hosting</title>
-
-    <!-- update the version number as needed -->
-    <script defer src="/__/firebase/12.0.0/firebase-app-compat.js"></script>
-    <!-- include only the Firebase features as you need -->
-    <script defer src="/__/firebase/12.0.0/firebase-auth-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-database-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-firestore-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-functions-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-messaging-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-storage-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-analytics-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-remote-config-compat.js"></script>
-    <script defer src="/__/firebase/12.0.0/firebase-performance-compat.js"></script>
-    <!-- 
-      initialize the SDK after all desired features are loaded, set useEmulator to false
-      to avoid connecting the SDK to running emulators.
-    -->
-    <script defer src="/__/firebase/init.js?useEmulator=true"></script>
-
-    <style media="screen">
-      body { background: #ECEFF1; color: rgba(0,0,0,0.87); font-family: Roboto, Helvetica, Arial, sans-serif; margin: 0; padding: 0; }
-      #message { background: white; max-width: 360px; margin: 100px auto 16px; padding: 32px 24px; border-radius: 3px; }
-      #message h2 { color: #ffa100; font-weight: bold; font-size: 16px; margin: 0 0 8px; }
-      #message h1 { font-size: 22px; font-weight: 300; color: rgba(0,0,0,0.6); margin: 0 0 16px;}
-      #message p { line-height: 140%; margin: 16px 0 24px; font-size: 14px; }
-      #message a { display: block; text-align: center; background: #039be5; text-transform: uppercase; text-decoration: none; color: white; padding: 16px; border-radius: 4px; }
-      #message, #message a { box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24); }
-      #load { color: rgba(0,0,0,0.4); text-align: center; font-size: 13px; }
-      @media (max-width: 600px) {
-        body, #message { margin-top: 0; background: white; box-shadow: none; }
-        body { border-top: 16px solid #ffa100; }
-      }
-    </style>
-  </head>
-  <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
-    <p id="load">Firebase SDK Loading&hellip;</p>
-
-    <script>
-      document.addEventListener('DOMContentLoaded', function() {
-        const loadEl = document.querySelector('#load');
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-        // // The Firebase SDK is initialized and available here!
-        //
-        // firebase.auth().onAuthStateChanged(user => { });
-        // firebase.database().ref('/path/to/ref').on('value', snapshot => { });
-        // firebase.firestore().doc('/foo/bar').get().then(() => { });
-        // firebase.functions().httpsCallable('yourFunction')().then(() => { });
-        // firebase.messaging().requestPermission().then(() => { });
-        // firebase.storage().ref('/path/to/ref').getDownloadURL().then(() => { });
-        // firebase.analytics(); // call to activate
-        // firebase.analytics().logEvent('tutorial_completed');
-        // firebase.performance(); // call to activate
-        //
-        // // 🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥🔥
-
-        try {
-          let app = firebase.app();
-          let features = [
-            'auth', 
-            'database', 
-            'firestore',
-            'functions',
-            'messaging', 
-            'storage', 
-            'analytics', 
-            'remoteConfig',
-            'performance',
-          ].filter(feature => typeof app[feature] === 'function');
-          loadEl.textContent = `Firebase SDK loaded with ${features.join(', ')}`;
-        } catch (e) {
-          console.error(e);
-          loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>หน้าแรก - การแข่งขันทักษะภาษาไทย</title>
+    <style>
+        :root {
+            --primary-color: #2C3E50; /* Midnight Blue */
+            --secondary-color: #3498DB; /* Peter River Blue */
+            --background-color: #F4F6F9; /* Ultra Light Grey */
+            --card-background-color: #FFFFFF;
+            --text-color: #5D6D7E; /* Muted Blue-Grey */
+            --title-color: #2C3E50;
+            --accent-teal: #16A085; /* Teal for the second button */
+            --shadow-color: rgba(44, 62, 80, 0.1);
+            --border-color: #EAECEE; /* Soft border color */
         }
-      });
+        html {
+            box-sizing: border-box;
+        }
+        *, *:before, *:after { 
+            box-sizing: inherit; 
+        }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            margin: 0;
+            padding: 20px; 
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; 
+        }
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            background-color: var(--card-background-color);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 30px var(--shadow-color);
+        }
+        @media (min-width: 768px) {
+            .main-container {
+                padding: 30px;
+            }
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+            padding: 1.5rem 1rem;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            background-color: #F8F9F9;
+        }
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 20px; /* Space between logos */
+            margin-bottom: 1rem;
+        }
+        .logo-container img {
+            width: 100px; 
+            height: 100px;
+            object-fit: contain;
+        }
+        header h1 {
+            font-size: clamp(1.5rem, 4vw, 2rem); 
+            font-weight: 700;
+            margin: 0 0 0.5rem 0;
+            color: var(--title-color);
+        }
+        .organizers {
+            font-size: clamp(0.9rem, 2.5vw, 1rem); 
+            font-weight: 500;
+            color: var(--text-color);
+            line-height: 1.8;
+        }
+
+        .selection-grid {
+            display: flex;
+            flex-wrap: wrap; 
+            justify-content: center; 
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .competition-card {
+            background-color: var(--card-background-color);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text-color);
+            box-shadow: 0 8px 25px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden; 
+            flex: 1 1 320px; 
+            max-width: 550px; 
+        }
+        .competition-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(44, 62, 80, 0.15);
+        }
+
+        .card-header {
+            padding: 20px 30px;
+            color: white;
+        }
+        .card-header .title {
+            font-size: clamp(1.2em, 4vw, 1.4em); 
+            font-weight: 700;
+            margin: 0;
+        }
+        
+        .competition-card.area .card-header { background-color: var(--secondary-color); }
+        .competition-card.province .card-header { background-color: var(--accent-teal); }
+        
+        .card-body {
+            flex-grow: 1;
+            padding: 20px 30px;
+        }
+        .card-body ul {
+            list-style-type: none;
+            padding: 0;
+            margin: 0;
+        }
+        .card-body li {
+            font-size: clamp(1em, 3vw, 1.05em); 
+            margin-bottom: 12px;
+            display: flex;
+            align-items: flex-start;
+        }
+        .card-body li::before {
+            content: '🔹';
+            margin-right: 10px;
+            color: var(--secondary-color);
+            font-size: 0.9em;
+            line-height: 1.6;
+        }
+        .competition-card.province .card-body li::before {
+            color: var(--accent-teal);
+        }
+
+        .card-footer {
+            padding: 15px 30px;
+            font-weight: 600;
+            text-align: center;
+            background-color: #EAF2F8;
+            color: #2874A6;
+            margin-top: auto;
+            font-size: clamp(0.9em, 2.5vw, 1em); 
+        }
+        .competition-card.province .card-footer {
+             background-color: #E8F6F3;
+             color: #117A65;
+        }
+
+        .contact-info {
+            border-top: 1px solid var(--border-color);
+            padding-top: 2rem;
+            margin-top: 2rem;
+        }
+        .contact-title {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: 700;
+            color: var(--title-color);
+            margin-top: 0;
+            margin-bottom: 1.5rem;
+        }
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+        .contact-group h3 {
+            font-size: 1.2em;
+            color: var(--primary-color);
+            margin-top: 0;
+            margin-bottom: 10px;
+            padding-bottom: 5px;
+            border-bottom: 2px solid var(--secondary-color);
+        }
+        .contact-group.province h3 {
+            border-bottom-color: var(--accent-teal);
+        }
+        .contact-group ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .contact-group li {
+            margin-bottom: 10px;
+        }
+
+        @media (max-width: 767px) {
+            .selection-grid {
+                flex-direction: column;
+                gap: 20px;
+            }
+            .competition-card {
+                flex-basis: 100%;
+            }
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="main-container">
+        <header>
+            <div class="logo-container">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B8%97%E0%B8%A3%E0%B8%A7%E0%B8%87%E0%B8%A8%E0%B8%B6%E0%B8%81%E0%B8%A9%E0%B8%B2%E0%B8%98%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%84%E0%B8%97%E0%B8%A2.svg" alt="โลโก้กระทรวงศึกษาธิการ">
+                <img src="https://img2.pic.in.th/pic/-1-d31a1c311610bd82.png" alt="โลโก้ สพฐ.">
+            </div>
+            <h1>การแข่งขันทักษะภาษาไทย โครงการรักษ์ภาษาไทย</h1>
+            <div class="organizers">
+                สำนักงานศึกษาธิการจังหวัดร้อยเอ็ด<br>
+                สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต 1<br>
+                สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต 2<br>
+                สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต 3
+            </div>
+        </header>
+
+        <main>
+            <section class="selection-grid">
+                <!-- [EDITED] Updated Link -->
+                <a href="https://sites.google.com/roiet1.go.th/skills-contest/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%81%E0%B8%82%E0%B8%87%E0%B8%82%E0%B8%99%E0%B8%A3%E0%B8%B0%E0%B8%94%E0%B8%9A%E0%B9%80%E0%B8%82%E0%B8%95%E0%B8%9E%E0%B8%99%E0%B8%97-%E0%B8%AA%E0%B8%9E%E0%B8%9B-%E0%B8%A3%E0%B8%AD-1" target="_blank" class="competition-card area">
+                    <div class="card-header">
+                        <h2 class="title">การแข่งขันระดับเขตพื้นที่</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>การแข่งขันระดับนักเรียน</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        แข่งขันวันที่ 15 กรกฎาคม พ.ศ. 2568
+                    </div>
+                </a>
+
+                <!-- [EDITED] Updated Link -->
+                <a href="https://sites.google.com/roiet1.go.th/skills-contest/%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%81%E0%B8%82%E0%B8%87%E0%B8%82%E0%B8%99%E0%B8%A3%E0%B8%B0%E0%B8%94%E0%B8%9A%E0%B8%88%E0%B8%87%E0%B8%AB%E0%B8%A7%E0%B8%94-%E0%B8%A8%E0%B8%98%E0%B8%88-%E0%B8%A3%E0%B8%AD%E0%B8%A2%E0%B9%80%E0%B8%AD%E0%B8%94" target="_blank" class="competition-card province">
+                    <div class="card-header">
+                        <h2 class="title">การแข่งขันระดับจังหวัด (ศธจ.ร้อยเอ็ด)</h2>
+                    </div>
+                    <div class="card-body">
+                        <ul>
+                            <li>ส่งผลงานนวัตกรรมด้านการบริหาร (ผู้บริหารสถานศึกษา)</li>
+                            <li>ส่งผลงานนวัตกรรมด้านการสอน (ครูผู้สอน)</li>
+                        </ul>
+                    </div>
+                    <div class="card-footer">
+                        ส่งผลงานภายในวันที่ 25 กรกฎาคม พ.ศ. 2568
+                    </div>
+                </a>
+            </section>
+        </main>
+        
+        <section class="contact-info">
+            <h2 class="contact-title">ข้อมูลผู้ประสานงาน</h2>
+            <div class="contact-grid">
+                <div class="contact-group area">
+                    <h3>สพป.ร้อยเอ็ด เขต 1</h3>
+                    <ul>
+                        <li>ศน.วลัยพร อ่อนพฤกษ์ภูมิ<br><strong>โทร:</strong> -</li>
+                        <li>นายพิชญพงษ์ พละหงษ์<br><strong>โทร:</strong> -</li>
+                    </ul>
+                </div>
+                <div class="contact-group province">
+                    <h3>ศธจ.ร้อยเอ็ด</h3>
+                    <ul>
+                        <li>ศน. <br><strong>โทร:</strong> -</li>
+                        <li>นาย <br><strong>โทร:</strong> -</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // [REMOVED] SweetAlert script is no longer needed as buttons have valid links.
+        });
     </script>
-  </body>
+</body>
 </html>
