@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ระบบบันทึกคะแนน</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen py-10 px-4">
+  <div class="max-w-5xl mx-auto bg-white shadow-lg rounded-xl p-6">
+    <h1 class="text-2xl font-bold text-blue-700 mb-6 text-center">ระบบบันทึกคะแนนการแข่งขัน</h1>
+
+    <!-- Dropdown -->
+    <div class="mb-6">
+      <label class="block text-gray-700 font-semibold mb-2">เลือกรายการแข่งขัน:</label>
+      <select id="competition-select" class="w-full p-3 border rounded-lg">
+        <option value="">-- เลือกรายการ --</option>
+      </select>
+    </div>
+
+    <!-- Loading -->
+    <div id="loading" class="text-center text-gray-500 my-6 hidden">
+      กำลังโหลดข้อมูล...
+    </div>
+
+    <!-- Table -->
+    <div id="table-container" class="overflow-x-auto hidden">
+      <table class="w-full text-sm border border-gray-300 rounded-lg">
+        <thead class="bg-blue-100 text-blue-800 font-semibold">
+          <tr id="table-head"></tr>
+        </thead>
+        <tbody id="table-body" class="bg-white divide-y divide-gray-200"></tbody>
+      </table>
+    </div>
+  </div>
+
+  <script>
+    const competitionSelect = document.getElementById('competition-select');
+    const loadingDiv = document.getElementById('loading');
+    const tableContainer = document.getElementById('table-container');
+    const tableHead = document.getElementById('table-head');
+    const tableBody = document.getElementById('table-body');
+
+    const competitions = [
+      { name: "1.คัดลายมือ ป. 1 - 3", id: "1pXH5EzRyBMY0XJG1hSeyGj0_dSslOaGNgIrUSxpO5VY", sheetName: "รายชื่อ" },
+      { name: "2.คัดลายมือ ป. 4 - 6", id: "1lpf7tEoOqMmOyTTp3AMrAVQ5dQA-PKU4KaU5blLnCnI", sheetName: "Sheet1" },
+      { name: "3.คัดลายมือ ม. 1 - 3", id: "1qyIJbSFq5cQn3grGEWUNQMXXKmeCkY4gPwL3p3TZx5I", sheetName: "Sheet1" },
+      { name: "4.เขียนเรื่องจากภาพ ป.1-3", id: "1h8CjetY66IiQsssZlVR3-teK1NtjzfwJk3uCj8GFdT8", sheetName: "Sheet1" },
+      { name: "5.เขียนเรียงความ ป. 4 - 6", id: "1rq0elpiM7I6QEWnGln_V-RbKyeONPOXBsoQr3P6wozk", sheetName: "Sheet1" },
+      { name: "6.เขียนเรียงความ ม. 1 - 3", id: "1A2eacaE73ALKRWCKHDu1PEC4qgDs2pioEECylvoBKA4", sheetName: "Sheet1" },
+      { name: "7.แต่งคำประพันธ์ ป. 4 - 6", id: "1bwlGvQhg66Rit5ooRRVo-jt87yMfG5pvqwztZ5jSuZw", sheetName: "Sheet1" },
+      { name: "8.แต่งคำประพันธ์ ม.1 - 3", id: "1Un79RjfH3BGIInfP40ImAACOejKQ6by_Siyi-xBhWK8", sheetName: "Sheet1" },
+      { name: "9.การอ่านจับใจความสำคัญ ป. 1 - 3", id: "1NGokjyAdJkkaGr5w-npsPyz34XaiatgNyDl8Jbf6QnA", sheetName: "Sheet1" },
+      { name: "10.การอ่านจับใจความสำคัญ ป. 4 - 6", id: "1h0lZdnYzxqtHqsY47R6QmSBCHIGo5CJyuJ95aveSiCY", sheetName: "Sheet1" },
+      { name: "11.การอ่านจับใจความสำคัญ ม.1 -3", id: "1qTXDN6FNW7M-2V11NgwOO95zmMM2N6jQlW38I0NVESA", sheetName: "Sheet1" }
+    ];
+
+    // ใส่ option ลง dropdown
+    competitions.forEach((comp, i) => {
+      const option = document.createElement('option');
+      option.value = i;
+      option.textContent = comp.name;
+      competitionSelect.appendChild(option);
+    });
+
+    competitionSelect.addEventListener('change', () => {
+      const selected = competitionSelect.value;
+      if (selected === "") return;
+
+      const comp = competitions[selected];
+      loadCompetitionData(comp);
+    });
+
+    function loadCompetitionData(comp) {
+      loadingDiv.classList.remove('hidden');
+      tableContainer.classList.add('hidden');
+
+      google.script.run
+        .withSuccessHandler((data) => {
+          loadingDiv.classList.add('hidden');
+          renderTable(data, comp);
+        })
+        .withFailureHandler((error) => {
+          loadingDiv.textContent = 'เกิดข้อผิดพลาด: ' + error.message;
+        })
+        .getCompetitionData(comp.id, comp.sheetName);
+    }
+
+    function renderTable(data, comp) {
+      if (!data || data.length === 0) {
+        tableContainer.classList.add('hidden');
+        return;
+      }
+
+      tableHead.innerHTML = "";
+      tableBody.innerHTML = "";
+
+      const headers = data[0];
+      headers.forEach(h => {
+        const th = document.createElement('th');
+        th.textContent = h;
+        th.className = 'p-2 border';
+        tableHead.appendChild(th);
+      });
+
+      const scoreTh = document.createElement('th');
+      scoreTh.textContent = 'คะแนน (คอลัมน์ I)';
+      scoreTh.className = 'p-2 border';
+      tableHead.appendChild(scoreTh);
+
+      const actionTh = document.createElement('th');
+      actionTh.textContent = 'บันทึก';
+      actionTh.className = 'p-2 border';
+      tableHead.appendChild(actionTh);
+
+      data.slice(1).forEach((row, idx) => {
+        const tr = document.createElement('tr');
+        const rowNumber = idx + 2; // เริ่มจากแถวที่ 2
+
+        row.forEach(cell => {
+          const td = document.createElement('td');
+          td.textContent = cell || "";
+          td.className = 'p-2 border';
+          tr.appendChild(td);
+        });
+
+        // Input คะแนน
+        const scoreTd = document.createElement('td');
+        scoreTd.className = 'p-2 border';
+        const input = document.createElement('input');
+        input.type = 'number';
+        input.value = row[8] || '';
+        input.className = 'w-24 p-1 border rounded text-center';
+        scoreTd.appendChild(input);
+        tr.appendChild(scoreTd);
+
+        // ปุ่มบันทึก
+        const actionTd = document.createElement('td');
+        actionTd.className = 'p-2 border text-center';
+        const btn = document.createElement('button');
+        btn.textContent = 'บันทึก';
+        btn.className = 'bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 text-sm rounded';
+        btn.onclick = () => {
+          const score = input.value;
+          if (score === '' || isNaN(score)) {
+            alert('กรุณากรอกคะแนนให้ถูกต้อง');
+            return;
+          }
+
+          google.script.run
+            .withSuccessHandler(() => alert('บันทึกแล้ว'))
+            .withFailureHandler(err => alert('ผิดพลาด: ' + err.message))
+            .saveParticipantScore(comp.id, comp.sheetName, rowNumber, score);
+        };
+        actionTd.appendChild(btn);
+        tr.appendChild(actionTd);
+
+        tableBody.appendChild(tr);
+      });
+
+      tableContainer.classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>

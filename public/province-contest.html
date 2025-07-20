@@ -1,0 +1,687 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>การแข่งขันระดับจังหวัด - ศธจ.ร้อยเอ็ด</title>
+    <style>
+        :root {
+            --primary-color: #2C3E50; /* Midnight Blue */
+            --secondary-color: #16A085; /* Teal */
+            --background-color: #F4F6F9;
+            --card-background-color: #FFFFFF;
+            --text-color: #5D6D7E;
+            --title-color: #2C3E50;
+            --header-text-color: #FFFFFF;
+            --shadow-color: rgba(44, 62, 80, 0.1);
+            --border-color: #EAECEE;
+            --success-color: #2ECC71;
+            --error-color: #E74C3C;
+        }
+        html { box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden; 
+        }
+        .main-container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        .hero-banner {
+            background: linear-gradient(135deg, var(--secondary-color), var(--primary-color));
+            color: var(--header-text-color);
+            text-align: center;
+            padding: 50px 20px;
+            border-radius: 24px;
+            margin-bottom: 30px;
+            box-shadow: 0 10px 30px rgba(22, 160, 133, 0.2);
+        }
+        .hero-banner h1 { 
+            margin: 0; 
+            font-size: clamp(2rem, 5vw, 2.8rem); 
+            font-weight: 700;
+        }
+        .hero-banner p { 
+            margin: 10px 0 0 0; 
+            font-size: clamp(1rem, 2.5vw, 1.2rem); 
+            opacity: 0.9; 
+        }
+        
+        .selection-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 30px;
+        }
+
+        .competition-card {
+            background-color: var(--card-background-color);
+            border-radius: 16px;
+            text-decoration: none;
+            color: var(--text-color);
+            box-shadow: 0 8px 25px var(--shadow-color);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            overflow: hidden; 
+            cursor: pointer;
+        }
+        .competition-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 30px rgba(44, 62, 80, 0.15);
+        }
+        .card-header {
+            padding: 20px 30px;
+            color: white;
+        }
+        .card-header .title {
+            font-size: 1.4em;
+            font-weight: 700;
+            margin: 0;
+        }
+        .competition-card.teacher .card-header { background-color: var(--secondary-color); }
+        .competition-card.director .card-header { background-color: var(--primary-color); }
+        
+        .card-body {
+            flex-grow: 1;
+            padding: 20px 30px;
+        }
+        .card-body p {
+            font-size: 1.05em;
+            margin: 0;
+        }
+        .card-footer {
+            padding: 15px 30px;
+            font-weight: 700;
+            text-align: center;
+            color: white;
+            margin-top: auto;
+        }
+        .competition-card.teacher .card-footer { background-color: var(--secondary-color); }
+        .competition-card.director .card-footer { background-color: var(--primary-color); }
+
+        .content-card {
+            background-color: var(--card-background-color);
+            padding: 30px;
+            border-radius: 16px; 
+            margin-top: 40px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        .section-title { 
+            font-size: 1.8em; 
+            font-weight: 700; 
+            margin-top: 0; 
+            margin-bottom: 25px; 
+            color: var(--title-color); 
+            text-align: center;
+        }
+
+        .report-section {
+            margin-bottom: 2rem;
+        }
+        .report-section h3 {
+            font-size: 1.3em;
+            color: var(--title-color);
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 2px solid var(--border-color);
+        }
+        .table-wrapper {
+            overflow-x: auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85em;
+            table-layout: auto;
+        }
+        th, td {
+            padding: 10px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            word-wrap: break-word; 
+            white-space: normal; 
+        }
+        th {
+            background-color: #F4F6F9;
+            font-weight: 600;
+            color: var(--title-color);
+        }
+        tbody tr:nth-of-type(even) {
+            background-color: #FAFAFA;
+        }
+        
+        .file-status-cell {
+            text-align: center;
+        }
+        .status-dot {
+            display: inline-block;
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            border: 1px solid rgba(0,0,0,0.1);
+        }
+        .status-green { background-color: var(--success-color); }
+        .status-red { background-color: var(--error-color); }
+
+        .table-legend {
+            margin-top: 15px;
+            font-size: 0.9em;
+            color: var(--text-color);
+            display: flex;
+            gap: 20px;
+            justify-content: flex-start;
+            flex-wrap: wrap;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+        .pagination-controls button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+        .pagination-controls button:hover {
+            background-color: #117A65;
+        }
+        .pagination-controls button:disabled {
+            background-color: #BDC3C7;
+            cursor: not-allowed;
+        }
+        .pagination-controls span {
+            font-weight: 600;
+            color: var(--title-color);
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(44, 62, 80, 0.7);
+            display: flex; justify-content: center; align-items: flex-start; z-index: 1000;
+            opacity: 0; visibility: hidden; transition: opacity 0.3s ease, visibility 0.3s ease;
+            padding: 5vh 20px 20px;
+            overflow-y: auto;
+        }
+        .modal-overlay.active { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: var(--card-background-color);
+            border-radius: 16px;
+            width: 100%;
+            max-width: 750px;
+            position: relative;
+            transform: translateY(-50px);
+            transition: transform 0.4s ease, opacity 0.4s ease;
+            opacity: 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        .modal-overlay.active .modal-content { transform: translateY(0); opacity: 1; }
+        .modal-close-btn {
+            position: absolute; top: 15px; right: 15px; width: 35px; height: 35px;
+            font-size: 1.8rem; line-height: 35px; text-align: center; background: none;
+            border: none; color: #bdc3c7; cursor: pointer;
+            transition: color 0.2s ease, transform 0.2s ease; z-index: 1001; 
+        }
+        .modal-close-btn:hover { color: #E74C3C; transform: rotate(90deg); }
+        
+        .form-card { padding: 30px 40px; }
+        .form-header { text-align: center; padding-bottom: 20px; border-bottom: 2px solid var(--secondary-color); margin-bottom: 30px; }
+        .form-header h1 { color: var(--title-color); font-size: 1.8em; margin: 0 0 10px 0; }
+        .form-header p { font-size: 1em; line-height: 1.6; color: var(--text-color); }
+        .form-group { margin-bottom: 25px; }
+        .form-group label { display: block; font-weight: 700; margin-bottom: 8px; font-size: 1.1em; }
+        .form-group label .required { color: #E74C3C; }
+        .input-field { width: 100%; padding: 12px 15px; border: 1px solid #D5DBDB; border-radius: 8px; font-size: 1.05em; box-sizing: border-box; font-family: 'Sarabun', sans-serif; transition: border-color 0.3s, box-shadow 0.3s; background-color: #fff; }
+        .input-field:focus { outline: none; border-color: var(--secondary-color); box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.2); }
+        
+        .upload-area {
+            border: 3px dashed #D5DBDB; border-radius: 12px; padding: 20px;
+            text-align: center; cursor: pointer; transition: border-color 0.3s, background-color 0.3s;
+        }
+        .upload-area:hover, .upload-area.dragover { border-color: var(--secondary-color); background-color: #F4F6F9; }
+        .upload-area .upload-text { font-size: 1.1em; font-weight: 500; color: var(--title-color); }
+        .upload-area .upload-hint { font-size: 0.9em; color: var(--text-color); }
+        #file-input { display: none; }
+        #file-name { margin-top: 15px; font-weight: 600; color: var(--accent-teal); }
+        
+        .submit-btn { width: 100%; padding: 14px; border: none; border-radius: 8px; background-color: var(--secondary-color); color: white; font-size: 1.2em; font-weight: 700; cursor: pointer; transition: all 0.3s; }
+        .submit-btn:hover { background-color: #117A65; transform: translateY(-2px); }
+        .submit-btn:disabled { background-color: #95A5A6; cursor: not-allowed; transform: none; }
+    </style>
+</head>
+<body>
+    <main class="main-container">
+        <header class="hero-banner">
+            <h1>การแข่งขันระดับจังหวัด (ศธจ.ร้อยเอ็ด)</h1>
+            <p>ส่งผลงานนวัตกรรมด้านการบริหารและการสอน</p>
+        </header>
+
+        <section class="selection-grid">
+            <div id="open-teacher-form" class="competition-card teacher">
+                <div class="card-header"><h2 class="title">นวัตกรรมด้านการสอน</h2></div>
+                <div class="card-body"><p>สำหรับครูผู้สอนทุกสังกัด</p></div>
+                <div class="card-footer">คลิกเพื่อส่งผลงาน</div>
+            </div>
+            <div id="open-director-form" class="competition-card director">
+                <div class="card-header"><h2 class="title">นวัตกรรมด้านการบริหารสถานศึกษา</h2></div>
+                <div class="card-body"><p>สำหรับผู้บริหารสถานศึกษาทุกสังกัด</p></div>
+                <div class="card-footer">คลิกเพื่อส่งผลงาน</div>
+            </div>
+        </section>
+
+        <section class="content-card">
+            <h2 class="section-title">รายชื่อผู้ส่งผลงาน</h2>
+            
+            <div class="report-section">
+                <h3>นวัตกรรมด้านการสอน (ครูผู้สอน)</h3>
+                <div class="table-wrapper">
+                    <table id="teacher-submissions-table">
+                        <thead>
+                            <tr>
+                                <th>ลำดับ</th>
+                                <th>ชื่อนวัตกรรม</th>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>โรงเรียน</th>
+                                <th>ระดับชั้น</th>
+                                <th>ขนาด</th>
+                                <th>เขตพื้นที่</th>
+                                <th>ไฟล์</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="8" style="text-align:center;">กำลังโหลดข้อมูล...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="teacher-pagination" class="pagination-controls"></div>
+                <div class="table-legend">
+                    <div class="legend-item"><span class="status-dot status-green"></span> อัปโหลดไฟล์สำเร็จ</div>
+                    <div class="legend-item"><span class="status-dot status-red"></span> ยังไม่มีไฟล์</div>
+                </div>
+            </div>
+
+            <div class="report-section">
+                <h3>นวัตกรรมด้านการบริหารสถานศึกษา (ผู้บริหารสถานศึกษา)</h3>
+                <div class="table-wrapper">
+                    <table id="director-submissions-table">
+                        <thead>
+                            <tr>
+                                <th>ลำดับ</th>
+                                <th>ชื่อนวัตกรรม</th>
+                                <th>ชื่อ-นามสกุล</th>
+                                <th>โรงเรียน</th>
+                                <th>ขนาด</th>
+                                <th>เขตพื้นที่</th>
+                                <th>ไฟล์</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr><td colspan="7" style="text-align:center;">กำลังโหลดข้อมูล...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div id="director-pagination" class="pagination-controls"></div>
+                <div class="table-legend">
+                    <div class="legend-item"><span class="status-dot status-green"></span> อัปโหลดไฟล์สำเร็จ</div>
+                    <div class="legend-item"><span class="status-dot status-red"></span> ยังไม่มีไฟล์</div>
+                </div>
+            </div>
+        </section>
+         <div style="text-align: center; margin-top: 40px;">
+            <a href="index.html" style="display: inline-block; background-color: var(--primary-color); color: white; padding: 12px 24px; border-radius: 8px; text-decoration: none; font-weight: bold; transition: background-color 0.3s;">
+                ← กลับหน้าแรก
+            </a>
+        </div>
+    </main>
+
+    <!-- Modal: ฟอร์มอัปโหลดไฟล์ -->
+    <div id="upload-modal" class="modal-overlay">
+        <div class="modal-content">
+            <div class="form-card">
+                <button class="modal-close-btn">&times;</button>
+                <header class="form-header">
+                    <h1 id="modal-title"></h1>
+                    <p>ส่งผลงานภายในวันที่ 29 กรกฎาคม พ.ศ. 2568</p>
+                </header>
+                <form id="upload-form" novalidate>
+                    <input type="hidden" id="competition-type" name="competition_type">
+                    <div class="form-group">
+                        <label for="innovation-name">ชื่อนวัตกรรม <span class="required">*</span></label>
+                        <input type="text" id="innovation-name" name="innovation_name" class="input-field" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="school-name">สังกัดโรงเรียน <span class="required">*</span></label>
+                        <input type="text" id="school-name" name="school_name" class="input-field" required>
+                    </div>
+                    <div class="form-group" id="grade-level-group">
+                        <label for="grade-level">ระดับชั้น <span class="required">*</span></label>
+                        <select id="grade-level" name="grade_level" class="input-field" required>
+                            <option value="" disabled selected>-- กรุณาเลือกระดับชั้น --</option>
+                            <option value="ป.1">ป.1</option>
+                            <option value="ป.2">ป.2</option>
+                            <option value="ป.3">ป.3</option>
+                            <option value="ป.4">ป.4</option>
+                            <option value="ป.5">ป.5</option>
+                            <option value="ป.6">ป.6</option>
+                            <option value="ม.1">ม.1</option>
+                            <option value="ม.2">ม.2</option>
+                            <option value="ม.3">ม.3</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="school-size">ขนาดโรงเรียน <span class="required">*</span></label>
+                        <select id="school-size" name="school_size" class="input-field" required>
+                            <option value="" disabled selected>-- กรุณาเลือกขนาด --</option>
+                            <option value="เล็ก">เล็ก</option>
+                            <option value="กลาง">กลาง</option>
+                            <option value="ใหญ่">ใหญ่</option>
+                            <option value="ใหญ่พิเศษ">ใหญ่พิเศษ</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="area-office">สำนักงานเขตพื้นที่ <span class="required">*</span></label>
+                        <select id="area-office" name="area_office" class="input-field" required>
+                            <option value="" disabled selected>-- กรุณาเลือกเขตพื้นที่ --</option>
+                            <option value="สพป.ร้อยเอ็ด เขต 1">สพป.ร้อยเอ็ด เขต 1</option>
+                            <option value="สพป.ร้อยเอ็ด เขต 2">สพป.ร้อยเอ็ด เขต 2</option>
+                            <option value="สพป.ร้อยเอ็ด เขต 3">สพป.ร้อยเอ็ด เขต 3</option>
+                        </select>
+                    </div>
+                     <div class="form-group">
+                        <label for="full-name">ชื่อ-นามสกุล <span class="required">*</span></label>
+                        <input type="text" id="full-name" name="full_name" class="input-field" required>
+                    </div>
+                     <div class="form-group">
+                        <label for="phone-number">เบอร์โทรศัพท์ <span class="required">*</span></label>
+                        <input type="tel" id="phone-number" name="phone_number" class="input-field" required pattern="[0-9]{10}">
+                    </div>
+                    <div class="form-group">
+                        <label for="file-input">อัปโหลดไฟล์ผลงาน (PDF) <span class="required">*</span></label>
+                        <div id="upload-area" class="upload-area">
+                            <input type="file" id="file-input" accept=".pdf" required>
+                            <div class="upload-text">คลิกเพื่อเลือกไฟล์</div>
+                            <div class="upload-hint">ขนาดไฟล์ไม่เกิน 20MB</div>
+                        </div>
+                        <div id="file-name"></div>
+                    </div>
+                    <button type="submit" id="submit-upload-btn" class="submit-btn" disabled>ส่งผลงาน</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzU2U_Tn8dZJhCmuly2VFKdTU4bwbqA9wU4HVCaQ8MdtzLmFVo-sdk7p5cSoi1FjHQZ/exec"; 
+        
+        let allSubmissions = [];
+        let teacherCurrentPage = 1;
+        let directorCurrentPage = 1;
+        const ITEMS_PER_PAGE = 10;
+
+        const uploadModal = document.getElementById('upload-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const competitionTypeInput = document.getElementById('competition-type');
+        const uploadForm = document.getElementById('upload-form');
+        const uploadArea = document.getElementById('upload-area');
+        const fileInput = document.getElementById('file-input');
+        const fileNameDisplay = document.getElementById('file-name');
+        const submitBtn = document.getElementById('submit-upload-btn');
+        let selectedFile = null;
+
+        function openUploadModal(type) {
+            uploadForm.reset();
+            resetUploadState();
+            
+            const gradeLevelGroup = document.getElementById('grade-level-group');
+            const gradeLevelInput = document.getElementById('grade-level');
+
+            if (type === 'teacher') {
+                modalTitle.textContent = 'ส่งผลงานนวัตกรรมด้านการสอน';
+                competitionTypeInput.value = 'นวัตกรรมด้านการสอน (ครูผู้สอน)';
+                gradeLevelGroup.style.display = 'block'; 
+                gradeLevelInput.required = true;
+            } else { 
+                modalTitle.textContent = 'ส่งผลงานนวัตกรรมด้านการบริหาร';
+                competitionTypeInput.value = 'นวัตกรรมด้านการบริหาร (ผู้บริหาร)';
+                gradeLevelGroup.style.display = 'none'; 
+                gradeLevelInput.required = false;
+            }
+            uploadModal.classList.add('active');
+        }
+
+        document.getElementById('open-teacher-form').addEventListener('click', () => openUploadModal('teacher'));
+        document.getElementById('open-director-form').addEventListener('click', () => openUploadModal('director'));
+
+        uploadModal.querySelector('.modal-close-btn').addEventListener('click', () => uploadModal.classList.remove('active'));
+        uploadModal.addEventListener('click', e => { if (e.target === uploadModal) uploadModal.classList.remove('active'); });
+
+        uploadArea.addEventListener('click', () => fileInput.click());
+        
+        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, e => {
+                e.preventDefault();
+                e.stopPropagation();
+            }, false);
+        });
+        ['dragenter', 'dragover'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
+        });
+        ['dragleave', 'drop'].forEach(eventName => {
+            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
+        });
+
+        uploadArea.addEventListener('drop', e => handleFiles(e.dataTransfer.files), false);
+        fileInput.addEventListener('change', e => handleFiles(e.target.files));
+
+        function handleFiles(files) {
+            if (files.length > 0) {
+                const file = files[0];
+                if (file.type !== 'application/pdf') {
+                    Swal.fire('ไฟล์ไม่ถูกต้อง', 'กรุณาเลือกไฟล์ PDF เท่านั้น', 'error');
+                    resetUploadState();
+                    return;
+                }
+                if (file.size > 20 * 1024 * 1024) { // 20MB
+                    Swal.fire('ไฟล์มีขนาดใหญ่เกินไป', 'กรุณาเลือกไฟล์ที่มีขนาดไม่เกิน 20MB', 'error');
+                    resetUploadState();
+                    return;
+                }
+                selectedFile = file;
+                fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${file.name}`;
+                submitBtn.disabled = false;
+            }
+        }
+
+        function resetUploadState() {
+            selectedFile = null;
+            fileNameDisplay.textContent = '';
+            submitBtn.disabled = true;
+            uploadForm.reset();
+        }
+
+        uploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            if (!selectedFile || !uploadForm.checkValidity()) {
+                Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูลและเลือกไฟล์ให้ครบถ้วน', 'warning');
+                return;
+            }
+
+            Swal.fire({
+                title: 'กำลังอัปโหลดไฟล์...',
+                text: 'กรุณารอสักครู่',
+                allowOutsideClick: false,
+                didOpen: () => Swal.showLoading()
+            });
+
+            const reader = new FileReader();
+            reader.readAsDataURL(selectedFile);
+            reader.onload = () => {
+                const fileData = reader.result.split(',');
+                const formData = new FormData(uploadForm);
+                const payload = Object.fromEntries(formData.entries());
+                payload.fileName = selectedFile.name;
+                payload.mimeType = selectedFile.type;
+                payload.fileContent = fileData[1];
+
+                fetch(SCRIPT_URL, {
+                    method: 'POST',
+                    body: JSON.stringify(payload),
+                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+                })
+                .then(response => response.json())
+                .then(result => {
+                    if (result.success) {
+                        Swal.fire('อัปโหลดสำเร็จ!', `ไฟล์ของคุณถูกบันทึกแล้ว`, 'success');
+                        uploadModal.classList.remove('active');
+                        resetUploadState();
+                        fetchAndDisplaySubmissions();
+                    } else {
+                        throw new Error(result.message || 'เกิดข้อผิดพลาดที่ไม่รู้จัก');
+                    }
+                })
+                .catch(error => {
+                    Swal.fire('เกิดข้อผิดพลาด!', 'ไม่สามารถอัปโหลดไฟล์ได้: ' + error.message, 'error');
+                });
+            };
+            reader.onerror = () => {
+                 Swal.fire('เกิดข้อผิดพลาด!', 'ไม่สามารถอ่านไฟล์ได้', 'error');
+            };
+        });
+
+        async function fetchAndDisplaySubmissions() {
+            const teacherTableBody = document.getElementById('teacher-submissions-table').querySelector('tbody');
+            const directorTableBody = document.getElementById('director-submissions-table').querySelector('tbody');
+
+            teacherTableBody.innerHTML = '<tr><td colspan="8" style="text-align:center;">กำลังโหลดข้อมูล...</td></tr>';
+            directorTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">กำลังโหลดข้อมูล...</td></tr>';
+
+            try {
+                const response = await fetch(SCRIPT_URL);
+                if (!response.ok) throw new Error(`เกิดข้อผิดพลาดในการดึงข้อมูล: ${response.statusText}`);
+
+                const result = await response.json();
+                if (!result.success) throw new Error(result.message || 'Apps Script ส่งข้อมูลกลับมาผิดพลาด');
+                
+                allSubmissions = result.data || [];
+                renderTables();
+
+            } catch (error) {
+                console.error("Fetch submissions error:", error);
+                const errorMessage = `<tr><td colspan="8" style="text-align:center; color:red;">เกิดข้อผิดพลาด: ${error.message}</td></tr>`;
+                teacherTableBody.innerHTML = errorMessage;
+                directorTableBody.innerHTML = errorMessage.replace('colspan="8"', 'colspan="7"');
+            }
+        }
+        
+        function renderTables() {
+            const teacherData = allSubmissions.filter(row => row['Competition Type'] === 'นวัตกรรมด้านการสอน (ครูผู้สอน)');
+            const directorData = allSubmissions.filter(row => row['Competition Type'] === 'นวัตกรรมด้านการบริหาร (ผู้บริหาร)');
+
+            renderTablePage('teacher', teacherData, teacherCurrentPage);
+            renderTablePage('director', directorData, directorCurrentPage);
+        }
+
+        function renderTablePage(type, data, page) {
+            const tableBodyId = `${type}-submissions-table`;
+            const paginationId = `${type}-pagination`;
+            const tableBody = document.getElementById(tableBodyId)?.querySelector('tbody');
+            const paginationControls = document.getElementById(paginationId);
+
+            if (!tableBody || !paginationControls) return;
+
+            tableBody.innerHTML = '';
+            
+            const totalItems = data.length;
+            const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+            const startIndex = (page - 1) * ITEMS_PER_PAGE;
+            const endIndex = startIndex + ITEMS_PER_PAGE;
+            const paginatedData = data.slice(startIndex, endIndex);
+
+            if (paginatedData.length > 0) {
+                paginatedData.forEach((row, index) => {
+                    const fileUrl = row['File URL'];
+                    const fileStatusHtml = fileUrl && fileUrl !== '#'
+                        ? `<span class="status-dot status-green" title="อัปโหลดไฟล์สำเร็จ"></span>`
+                        : `<span class="status-dot status-red" title="ยังไม่มีไฟล์"></span>`;
+                    
+                    let newRowHtml = `
+                        <tr>
+                            <td style="text-align:center;">${startIndex + index + 1}</td>
+                            <td>${row['Innovation Name'] || ''}</td>
+                            <td>${row['Full Name'] || ''}</td>
+                            <td>${row['School Name'] || ''}</td>
+                    `;
+
+                    if (type === 'teacher') {
+                        newRowHtml += `<td>${row['Grade Level'] || ''}</td>`;
+                    }
+
+                    newRowHtml += `
+                            <td>${row['School Size'] || ''}</td>
+                            <td>${row['Area Office'] || ''}</td>
+                            <td style="text-align:center;">${fileStatusHtml}</td>
+                        </tr>
+                    `;
+                    tableBody.innerHTML += newRowHtml;
+                });
+            } else {
+                const colspan = (type === 'teacher') ? 8 : 7;
+                tableBody.innerHTML = `<tr><td colspan="${colspan}" style="text-align:center;">ยังไม่มีผู้ส่งผลงาน</td></tr>`;
+            }
+
+            renderPagination(paginationControls, page, totalPages, type);
+        }
+
+        function renderPagination(container, currentPage, totalPages, type) {
+            container.innerHTML = '';
+            if (totalPages <= 1) return;
+
+            const prevDisabled = currentPage === 1 ? 'disabled' : '';
+            const nextDisabled = currentPage === totalPages ? 'disabled' : '';
+
+            container.innerHTML = `
+                <button onclick="window.changePage('${type}', ${currentPage - 1})" ${prevDisabled}>ย้อนกลับ</button>
+                <span>หน้า ${currentPage} / ${totalPages}</span>
+                <button onclick="window.changePage('${type}', ${currentPage + 1})" ${nextDisabled}>ถัดไป</button>
+            `;
+        }
+        
+        window.changePage = (type, page) => {
+            if (type === 'teacher') {
+                teacherCurrentPage = page;
+            } else if (type === 'director') {
+                directorCurrentPage = page;
+            }
+            renderTables();
+        };
+
+        fetchAndDisplaySubmissions();
+    });
+    </script>
+</body>
+</html>

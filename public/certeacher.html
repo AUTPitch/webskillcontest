@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ค้นหาเกียรติบัตรครูผู้ฝึกสอน</title>
+
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
+    <!-- Google Fonts (Sarabun) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <style>
+        body {
+            font-family: 'Sarabun', sans-serif;
+            /* --- จุดที่แก้ไข: เปลี่ยนสีพื้นหลังเป็นโทนส้มอ่อน --- */
+            background-color: #fffaf0; 
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+            font-size: 0.95rem; 
+        }
+        .header {
+            /* --- จุดที่แก้ไข: เปลี่ยน Gradient เป็นโทนสีส้ม --- */
+            background: linear-gradient(45deg, #f39c12, #e67e22);
+            color: white;
+            padding: 2rem 1.5rem;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .content {
+            flex-grow: 1;
+            padding: 2rem 1rem;
+        }
+        .main-card {
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        .footer {
+            background-color: #ffffff;
+            color: #6c757d;
+            padding: 1rem 0;
+            text-align: center;
+            border-top: 1px solid #dee2e6;
+            margin-top: auto;
+        }
+        .table-responsive {
+            border: 1px solid #dee2e6;
+            border-radius: 0.5rem;
+            overflow: hidden;
+        }
+        .table {
+            font-size: 0.9rem;
+        }
+        .table-light {
+            background-color: #fff3e0; /* สีหัวตารางโทนส้ม */
+            color: #8d6e63;
+            font-weight: 600;
+        }
+        .pagination .page-item.active .page-link {
+            background-color: #e67e22; /* สีส้ม */
+            border-color: #e67e22;
+        }
+        .search-card {
+            border-top: 4px solid #e67e22; /* สีส้ม */
+        }
+        .download-icon {
+            transition: transform 0.2s ease-in-out, opacity 0.2s;
+        }
+        .download-icon:hover {
+            transform: scale(1.15);
+            opacity: 0.8;
+        }
+        /* --- จุดที่แก้ไข: กำหนดสีปุ่มหลักเป็นสีส้ม --- */
+        .btn-primary {
+            background-color: #e67e22;
+            border-color: #e67e22;
+        }
+        .btn-primary:hover {
+            background-color: #d35400;
+            border-color: #d35400;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header -->
+    <header class="header">
+        <h2 class="fw-bold mb-2">ระบบค้นหาและดาวน์โหลดเกียรติบัตรครูผู้ฝึกสอน</h2>
+        <h5 class="mb-0 fw-normal">สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต ๑</h5>
+    </header>
+
+    <!-- Main Content -->
+    <main class="content">
+        <div class="main-card">
+            
+            <div class="mb-4">
+    <a href="area-contest.html" class="btn btn-outline-secondary">
+        <i class="bi bi-arrow-left"></i> ย้อนกลับไปหน้าหลัก
+    </a>
+</div>
+
+            <!-- Search & Filter Card -->
+            <div class="card shadow-sm border-0 mb-4 search-card">
+                <div class="card-body p-4">
+                    <h5 class="card-title mb-3">ค้นหาและกรองข้อมูลครูผู้ฝึกสอน</h5>
+                    <form id="search-form">
+                        <div class="input-group">
+                            <select class="form-select flex-grow-0" style="width: auto;" id="search-filter">
+                                <option value="all" selected>ค้นหาทั้งหมด</option>
+                                <option value="school">โรงเรียน</option>
+                                <option value="teacherName">รายชื่อครูผู้ฝึกสอน</option>
+                                <option value="activity">กิจกรรม</option>
+                            </select>
+                            <input type="text" class="form-control form-control" id="search-input" placeholder="กรอกคำค้นหา...">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-search"></i> ค้นหา
+                            </button>
+                             <button type="reset" class="btn btn-outline-secondary" id="reset-btn">
+                                <i class="bi bi-arrow-clockwise"></i> ล้างค่า
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+
+            <!-- Results Area -->
+            <div id="results-container">
+                <!-- Results table and pagination will be displayed here -->
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        Copyright © 2025 ระบบเกียรติบัตรออนไลน์ | Dev By Pitchayapong Palahong
+    </footer>
+
+
+    <!-- Bootstrap 5 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            
+            // --- Configuration ---
+            // --- จุดที่แก้ไข: อัปเดต URL ใหม่ ---
+            const APPS_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbzAnq9iD6WjG7yLTfbIB_LRKXM2XR1A9dXAtvazTtON29YXAOfB0Wk7L9M283Vi5hT0/exec';
+            const resultsContainer = document.getElementById('results-container');
+            const searchForm = document.getElementById('search-form');
+            const searchInput = document.getElementById('search-input');
+            const searchFilter = document.getElementById('search-filter');
+            const resetBtn = document.getElementById('reset-btn');
+
+            let allData = [];
+            let currentData = [];
+            let currentPage = 1;
+            const rowsPerPage = 20;
+
+            function displayUI(items) {
+                currentData = items;
+                currentPage = 1;
+                renderTablePage();
+                renderPagination();
+            }
+
+            function renderTablePage() {
+                const startIndex = (currentPage - 1) * rowsPerPage;
+                const endIndex = startIndex + rowsPerPage;
+                const paginatedItems = currentData.slice(startIndex, endIndex);
+
+                const tableBody = document.getElementById('results-tbody');
+                if (tableBody) {
+                    tableBody.innerHTML = '';
+                    if (paginatedItems.length === 0) {
+                        tableBody.innerHTML = `<tr><td colspan="5" class="text-center text-muted py-4">ไม่พบข้อมูล</td></tr>`;
+                        return;
+                    }
+                    paginatedItems.forEach((cert, index) => {
+                        let downloadButton = `<span class="text-muted">ไม่มีไฟล์</span>`;
+                        
+                        if (cert.docId && typeof cert.docId === 'string' && cert.docId.startsWith('http')) {
+                            let fileId = null;
+                            const idRegex = /d\/(.+?)\//;
+                            const match = cert.docId.match(idRegex);
+                            
+                            if (match && match[1]) {
+                                fileId = match[1];
+                                let pdfUrl = '#';
+
+                                if (cert.docId.includes('/presentation/')) {
+                                    pdfUrl = `https://docs.google.com/presentation/d/${fileId}/export/pdf`;
+                                } else {
+                                    pdfUrl = `https://docs.google.com/document/d/${fileId}/export?format=pdf`;
+                                }
+                                
+                                downloadButton = `<a href="${pdfUrl}" target="_blank" class="btn btn-link text-primary download-icon" title="ดาวน์โหลด/ดูเกียรติบัตร"><i class="bi bi-file-earmark-text fs-5"></i></a>`;
+                            }
+                        }
+                        
+                        const row = `
+                            <tr>
+                                <td>${startIndex + index + 1}</td>
+                                <td>${escapeHtml(cert.school)}</td>
+                                <td>${escapeHtml(cert.teacherName)}</td>
+                                <td>${escapeHtml(cert.activity)}</td>
+                                <td class="text-center">${downloadButton}</td>
+                            </tr>
+                        `;
+                        tableBody.insertAdjacentHTML('beforeend', row);
+                    });
+                }
+            }
+
+            function renderPagination() {
+                const paginationWrapper = document.getElementById('pagination-wrapper');
+                if (!paginationWrapper) return;
+                
+                paginationWrapper.innerHTML = '';
+                const pageCount = Math.ceil(currentData.length / rowsPerPage);
+
+                if (pageCount <= 1) return;
+
+                const ul = document.createElement('ul');
+                ul.className = 'pagination justify-content-center';
+
+                for (let i = 1; i <= pageCount; i++) {
+                    const li = document.createElement('li');
+                    li.className = 'page-item' + (i === currentPage ? ' active' : '');
+                    const a = document.createElement('a');
+                    a.className = 'page-link';
+                    a.href = '#';
+                    a.innerText = i;
+                    a.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        currentPage = i;
+                        renderTablePage();
+                        document.querySelectorAll('#pagination-wrapper .page-item').forEach(item => item.classList.remove('active'));
+                        li.classList.add('active');
+                    });
+                    li.appendChild(a);
+                    ul.appendChild(li);
+                }
+                paginationWrapper.appendChild(ul);
+            }
+
+            function loadInitialData() {
+                resultsContainer.innerHTML = `
+                    <div class="card shadow-sm border-0">
+                        <div class="card-body text-center p-5">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                            <p class="mt-3 mb-0">กำลังโหลดข้อมูลทั้งหมด...</p>
+                        </div>
+                    </div>`;
+
+                fetch(`${APPS_SCRIPT_URL}?action=getAllData`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error(`HTTP error! Status: ${response.status}`);
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.status === 'success') {
+                            allData = data.data;
+                            resultsContainer.innerHTML = `
+                                <div class="card shadow-sm border-0">
+                                    <div class="card-body">
+                                        <div class="table-responsive">
+                                            <table class="table table-hover align-middle">
+                                                <thead class="table-light">
+                                                    <tr>
+                                                        <th scope="col">ลำดับ</th>
+                                                        <th scope="col">โรงเรียน</th>
+                                                        <th scope="col">รายชื่อครูผู้ฝึกสอน</th>
+                                                        <th scope="col">กิจกรรม</th>
+                                                        <th scope="col" class="text-center">ดาวน์โหลด</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="results-tbody"></tbody>
+                                            </table>
+                                        </div>
+                                        <div id="pagination-wrapper" class="mt-4"></div>
+                                    </div>
+                                </div>`;
+                            displayUI(allData);
+                        } else {
+                            throw new Error(data.message || 'Failed to load data.');
+                        }
+                    })
+                    .catch(error => {
+                        resultsContainer.innerHTML = '';
+                        Swal.fire('เกิดข้อผิดพลาด', `ไม่สามารถโหลดข้อมูลได้: ${error.message}.`, 'error');
+                        console.error('Error object:', error);
+                    });
+            }
+
+            searchForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                const searchValue = searchInput.value.trim().toLowerCase();
+                const filterValue = searchFilter.value;
+
+                if (searchValue === "") {
+                    displayUI(allData);
+                    return;
+                }
+
+                const filtered = allData.filter(cert => {
+                    const school = (cert.school || '').toLowerCase();
+                    const name = (cert.teacherName || '').toLowerCase();
+                    const activity = (cert.activity || '').toLowerCase();
+
+                    switch(filterValue) {
+                        case 'school': return school.includes(searchValue);
+                        case 'teacherName': return name.includes(searchValue);
+                        case 'activity': return activity.includes(searchValue);
+                        case 'all':
+                        default:
+                            return school.includes(searchValue) || name.includes(searchValue) || activity.includes(searchValue);
+                    }
+                });
+                displayUI(filtered);
+            });
+
+            resetBtn.addEventListener('click', function() {
+                displayUI(allData);
+            });
+
+            function escapeHtml(unsafe) {
+                if (typeof unsafe !== 'string') return '';
+                return unsafe.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+            }
+
+            loadInitialData();
+        });
+    </script>
+</body>
+</html>
