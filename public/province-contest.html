@@ -219,7 +219,7 @@
             color: var(--title-color);
         }
 
-        /* Modal Styles */
+        /* Modal Styles are kept for potential future use, but are not opened by the main buttons anymore */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(44, 62, 80, 0.7);
             display: flex; justify-content: center; align-items: flex-start; z-index: 1000;
@@ -353,7 +353,7 @@
         </section>
     </main>
 
-    <!-- Modal: ฟอร์มอัปโหลดไฟล์ -->
+    <!-- Modal: ฟอร์มอัปโหลดไฟล์ (ซ่อนไว้เพื่อใช้ในอนาคต) -->
     <div id="upload-modal" class="modal-overlay">
         <div class="modal-content">
             <div class="form-card">
@@ -399,7 +399,6 @@
                     </div>
                     <div class="form-group">
                         <label for="area-office">สำนักงานเขตพื้นที่ <span class="required">*</span></label>
-                        <!-- --- จุดที่แก้ไข: เพิ่มตัวเลือก "สังกัดโรงเรียนเอกชน" --- -->
                         <select id="area-office" name="area_office" class="input-field" required>
                             <option value="" disabled selected>-- กรุณาเลือกเขตพื้นที่ --</option>
                             <option value="สพป.ร้อยเอ็ด เขต 1">สพป.ร้อยเอ็ด เขต 1</option>
@@ -441,137 +440,22 @@
         let directorCurrentPage = 1;
         const ITEMS_PER_PAGE = 10;
 
-        const uploadModal = document.getElementById('upload-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const competitionTypeInput = document.getElementById('competition-type');
-        const uploadForm = document.getElementById('upload-form');
-        const uploadArea = document.getElementById('upload-area');
-        const fileInput = document.getElementById('file-input');
-        const fileNameDisplay = document.getElementById('file-name');
-        const submitBtn = document.getElementById('submit-upload-btn');
-        let selectedFile = null;
-
-        function openUploadModal(type) {
-            uploadForm.reset();
-            resetUploadState();
-            
-            const gradeLevelGroup = document.getElementById('grade-level-group');
-            const gradeLevelInput = document.getElementById('grade-level');
-
-            if (type === 'teacher') {
-                modalTitle.textContent = 'ส่งผลงานนวัตกรรมด้านการสอน';
-                competitionTypeInput.value = 'นวัตกรรมด้านการสอน (ครูผู้สอน)';
-                gradeLevelGroup.style.display = 'block'; 
-                gradeLevelInput.required = true;
-            } else { 
-                modalTitle.textContent = 'ส่งผลงานนวัตกรรมด้านการบริหาร';
-                competitionTypeInput.value = 'นวัตกรรมด้านการบริหาร (ผู้บริหาร)';
-                gradeLevelGroup.style.display = 'none'; 
-                gradeLevelInput.required = false;
-            }
-            uploadModal.classList.add('active');
-        }
-
-        document.getElementById('open-teacher-form').addEventListener('click', () => openUploadModal('teacher'));
-        document.getElementById('open-director-form').addEventListener('click', () => openUploadModal('director'));
-
-        uploadModal.querySelector('.modal-close-btn').addEventListener('click', () => uploadModal.classList.remove('active'));
-        uploadModal.addEventListener('click', e => { if (e.target === uploadModal) uploadModal.classList.remove('active'); });
-
-        uploadArea.addEventListener('click', () => fileInput.click());
-        
-        ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, e => {
-                e.preventDefault();
-                e.stopPropagation();
-            }, false);
-        });
-        ['dragenter', 'dragover'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, () => uploadArea.classList.add('dragover'), false);
-        });
-        ['dragleave', 'drop'].forEach(eventName => {
-            uploadArea.addEventListener(eventName, () => uploadArea.classList.remove('dragover'), false);
-        });
-
-        uploadArea.addEventListener('drop', e => handleFiles(e.dataTransfer.files), false);
-        fileInput.addEventListener('change', e => handleFiles(e.target.files));
-
-        function handleFiles(files) {
-            if (files.length > 0) {
-                const file = files[0];
-                if (file.type !== 'application/pdf') {
-                    Swal.fire('ไฟล์ไม่ถูกต้อง', 'กรุณาเลือกไฟล์ PDF เท่านั้น', 'error');
-                    resetUploadState();
-                    return;
-                }
-                if (file.size > 20 * 1024 * 1024) { // 20MB
-                    Swal.fire('ไฟล์มีขนาดใหญ่เกินไป', 'กรุณาเลือกไฟล์ที่มีขนาดไม่เกิน 20MB', 'error');
-                    resetUploadState();
-                    return;
-                }
-                selectedFile = file;
-                fileNameDisplay.textContent = `ไฟล์ที่เลือก: ${file.name}`;
-                submitBtn.disabled = false;
-            }
-        }
-
-        function resetUploadState() {
-            selectedFile = null;
-            fileNameDisplay.textContent = '';
-            submitBtn.disabled = true;
-            uploadForm.reset();
-        }
-
-        uploadForm.addEventListener('submit', function(e) {
-            e.preventDefault();
-            if (!selectedFile || !uploadForm.checkValidity()) {
-                Swal.fire('ข้อมูลไม่ครบถ้วน', 'กรุณากรอกข้อมูลและเลือกไฟล์ให้ครบถ้วน', 'warning');
-                return;
-            }
-
+        // --- จุดที่แก้ไข: สร้างฟังก์ชันสำหรับแสดง Popup ---
+        const showClosedPopup = (event) => {
+            event.preventDefault();
             Swal.fire({
-                title: 'กำลังอัปโหลดไฟล์...',
-                text: 'กรุณารอสักครู่',
-                allowOutsideClick: false,
-                didOpen: () => Swal.showLoading()
+                title: 'ปิดรับผลงานแล้ว',
+                text: 'กรุณาติดต่อแอดมิน หากต้องการแก้ไข',
+                icon: 'info',
+                confirmButtonText: 'ตกลง'
             });
+        };
 
-            const reader = new FileReader();
-            reader.readAsDataURL(selectedFile);
-            reader.onload = () => {
-                const fileData = reader.result.split(',');
-                const formData = new FormData(uploadForm);
-                const payload = Object.fromEntries(formData.entries());
-                payload.fileName = selectedFile.name;
-                payload.mimeType = selectedFile.type;
-                payload.fileContent = fileData[1];
+        // --- จุดที่แก้ไข: เปลี่ยน Event Listener ให้เรียก Popup แทนการเปิดฟอร์ม ---
+        document.getElementById('open-teacher-form').addEventListener('click', showClosedPopup);
+        document.getElementById('open-director-form').addEventListener('click', showClosedPopup);
 
-                fetch(SCRIPT_URL, {
-                    method: 'POST',
-                    body: JSON.stringify(payload),
-                    headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-                })
-                .then(response => response.json())
-                .then(result => {
-                    if (result.success) {
-                        Swal.fire('อัปโหลดสำเร็จ!', `ไฟล์ของคุณถูกบันทึกแล้ว`, 'success');
-                        uploadModal.classList.remove('active');
-                        resetUploadState();
-                        // โหลดข้อมูลใหม่หลังจากอัปเดตสำเร็จ
-                        fetchAndDisplaySubmissions(); 
-                    } else {
-                        throw new Error(result.message || 'เกิดข้อผิดพลาดที่ไม่รู้จัก');
-                    }
-                })
-                .catch(error => {
-                    Swal.fire('เกิดข้อผิดพลาด!', 'ไม่สามารถอัปโหลดไฟล์ได้: ' + error.message, 'error');
-                });
-            };
-            reader.onerror = () => {
-                 Swal.fire('เกิดข้อผิดพลาด!', 'ไม่สามารถอ่านไฟล์ได้', 'error');
-            };
-        });
-
+        // โค้ดส่วนที่เหลือสำหรับการดึงข้อมูลและแสดงตารางยังคงทำงานเหมือนเดิม
         async function fetchAndDisplaySubmissions() {
             const teacherTableBody = document.getElementById('teacher-submissions-table').querySelector('tbody');
             const directorTableBody = document.getElementById('director-submissions-table').querySelector('tbody');
@@ -580,7 +464,6 @@
             directorTableBody.innerHTML = '<tr><td colspan="7" style="text-align:center;">กำลังโหลดข้อมูล...</td></tr>';
 
             try {
-                // --- จุดที่แก้ไข: ดึงข้อมูลจาก SCRIPT_URL โดยตรง ---
                 const response = await fetch(SCRIPT_URL);
                 if (!response.ok) throw new Error(`เกิดข้อผิดพลาดในการดึงข้อมูล: ${response.statusText}`);
 
@@ -683,10 +566,5 @@
         fetchAndDisplaySubmissions();
     });
     </script>
-    <div class="mb-4">
-                <a href="index.html" class="btn btn-outline-secondary">
-                  <i class="bi bi-arrow-left"></i> <center>ย้อนกลับไปหน้าหลัก</center>
-                </a>
-                </div>
 </body>
 </html>
