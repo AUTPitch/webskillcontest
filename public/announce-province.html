@@ -1,0 +1,372 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+  <title>ประกาศผลการแข่งขัน - ระดับจังหวัด</title>
+  <style>
+    :root {
+      --primary-color: #2C3E50;
+      --secondary-color: #3498DB;
+      --background-color: #F4F6F9;
+      --card-background-color: #FFFFFF;
+      --text-color: #5D6D7E;
+      --title-color: #2C3E50;
+      --shadow-color: rgba(44, 62, 80, 0.1);
+      --border-color: #EAECEE;
+    }
+    html { box-sizing: border-box; }
+    *, *:before, *:after { box-sizing: inherit; }
+    body {
+      font-family: 'Sarabun', sans-serif;
+      margin: 0;
+      padding: 20px;
+      background-color: var(--background-color);
+      color: var(--text-color);
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    .main-container {
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+    header {
+      background: linear-gradient(135deg, #fff1cc, #ffe4b3); /* โทนสีเหลืองอ่อน */
+      color: #4e342e; /* สีตัวอักษรสีน้ำตาลเข้ม */
+      text-align: center;
+      padding: 20px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+    }
+    .logo-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 30px; /* ระยะห่างระหว่างโลโก้ */
+      margin-bottom: 15px;
+    }
+    .logo-container img {
+      height: 100px;
+      max-width: 100px;
+      object-fit: contain;
+    }
+    header h1 {
+      margin: 10px 0;
+      font-size: clamp(1.6rem, 4vw, 2.2rem);
+    }
+    .organizers {
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      line-height: 1.5;
+    }
+    .content-card {
+      background-color: var(--card-background-color);
+      padding: 30px;
+      border-radius: 16px;
+      margin-bottom: 30px;
+      box-shadow: 0 4px 12px var(--shadow-color);
+    }
+    .section-title {
+      font-size: 1.5em;
+      font-weight: 700;
+      margin: 0 0 20px;
+      color: var(--title-color);
+    }
+    .filter-controls {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 20px;
+      align-items: end;
+      margin-bottom: 20px;
+    }
+    .form-group label {
+      display: block;
+      font-weight: 600;
+      margin-bottom: 5px;
+      color: var(--title-color);
+    }
+    .input-field {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #BDC3C7;
+      border-radius: 8px;
+      font-size: 1em;
+      font-family: 'Sarabun', sans-serif;
+    }
+    .table-wrapper { overflow-x: auto; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 1rem;
+      font-size: 0.85em;
+    }
+    th, td {
+      padding: 9px 11px;
+      border: 1px solid var(--border-color);
+      text-align: left;
+      white-space: nowrap;
+      vertical-align: middle;
+    }
+    th {
+      background-color: #F4F6F9;
+      font-weight: 600;
+      color: var(--title-color);
+    }
+    tbody tr:nth-of-type(even) { background-color: #FAFAFA; }
+    .pagination-controls {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 10px;
+      margin-top: 1.5rem;
+    }
+    .pagination-controls button {
+      background-color: var(--secondary-color);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      padding: 8px 16px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    .pagination-controls button:hover {
+      background-color: #2980B9;
+    }
+    .pagination-controls button:disabled {
+      background-color: #BDC3C7;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+<main class="main-container">
+  <header>
+    <div class="logo-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B8%97%E0%B8%A3%E0%B8%A7%E0%B8%87%E0%B8%A8%E0%B8%B6%E0%B8%81%E0%B8%A9%E0%B8%B2%E0%B8%98%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%84%E0%B8%97%E0%B8%A2.svg" alt="โลโก้กระทรวงศึกษาธิการ">
+        <img src="https://img2.pic.in.th/pic/-1-d31a1c311610bd82.png" alt="โลโก้ สพฐ.">
+    </div>
+    <h1>ประกาศผลการแข่งขันทักษะภาษาไทย โครงการรักษ์ภาษาไทย</h1>
+    <div class="organizers">
+        สำนักงานศึกษาธิการจังหวัดร้อยเอ็ด<br>
+        สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต 1<br>
+        สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต 2<br>
+        สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต 3
+    </div>
+  </header>
+
+  <section class="content-card">
+    <h2 class="section-title">เลือกรายการแข่งขัน</h2>
+    <div class="filter-controls">
+      <div class="form-group">
+        <label for="competition-select">เลือกรายการแข่งขัน:</label>
+        <select id="competition-select" class="input-field">
+          <option value="">-- กรุณาเลือกรายการ --</option>
+          <option value="อ่านจับใจความ ป.1-3">อ่านจับใจความ ป.1-3</option>
+          <option value="อ่านจับใจความ ป.4-6">อ่านจับใจความ ป.4-6</option>
+          <option value="คัดลายมือ ป.1-3">คัดลายมือ ป.1-3</option>
+          <option value="คัดลายมือ ป.4-6">คัดลายมือ ป.4-6</option>
+          <option value="เขียนเรื่องจากภาพ ป.1-3">เขียนเรื่องจากภาพ ป.1-3</option>
+          <option value="เขียนเรียงความ ป.4-6">เขียนเรียงความ ป.4-6</option>
+          <option value="แต่งคำประพันธ์ ป.4-6">แต่งคำประพันธ์ ป.4-6</option>
+        </select>
+      </div>
+    </div>
+  </section>
+
+  <section id="results-section" class="content-card" style="display: none;">
+    <h2 id="results-title" class="section-title"></h2>
+    <div class="table-wrapper">
+      <table id="results-table">
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div id="pagination-controls" class="pagination-controls"></div>
+  </section>
+</main>
+
+<script>
+// --- สำคัญ! ---
+// URL of Google Apps Script for each competition
+const COMPETITION_SCRIPTS = {
+  "อ่านจับใจความ ป.1-3": "https://script.google.com/macros/s/AKfycbwwun3qG18Ew4sFeZsH4G8zEWvKr-4wbDqBsLA7JgRdg7GMuDFjLejNQSzBGPd53gnyng/exec",
+  "อ่านจับใจความ ป.4-6": "https://script.google.com/macros/s/AKfycbza84C74frGS2vCaAVLLq3iDH1diQ7Mz5lTgTmQkL9LgybNG0Z5ezP9ORo08SZSVts1nw/exec",
+  "คัดลายมือ ป.1-3": "https://script.google.com/macros/s/AKfycbwwDk60ZMEqrAivTyq64iXNcRoryM3kMRd5ATRqO5L0r8oR5nh4PsIpINlLkQT98nID/exec",
+  "คัดลายมือ ป.4-6": "https://script.google.com/macros/s/AKfycbyPmQv61MDHz27Dl3FRXLSvcx_Oz-fJbpb9uiZuvvLQASuuCGk5VQh23zqhwyXq2f5A6A/exec",
+  "เขียนเรื่องจากภาพ ป.1-3": "https://script.google.com/macros/s/AKfycbzYDcWyB4QPbrjVEbSNegXo29QPlgftug-WIXwn1-C5xdImXNRH9A7ewYhuut4hA4coEA/exec",
+  "เขียนเรียงความ ป.4-6": "https://script.google.com/macros/s/AKfycbwUNM9nBcJx9pOBUBjvt4qKcO9RXndSnIQGcU27XjQjb1Z1F4Wb1UwocrPfZLPMr5zpTg/exec",
+  "แต่งคำประพันธ์ ป.4-6": "https://script.google.com/macros/s/AKfycby7UtS1KRNETnKF_iC6XNzBgoOfE74LCU7yfZuZTZQCYbrGWq1YsU5LreiYp026QFHa/exec"
+};
+
+// --- Display settings ---
+// Add column names you "do not" want to display in the table here
+const HEADERS_TO_HIDE = ["ลำดับที่", "รหัส", "เครือข่าย", "อำเภอ", "ลงชื่อกรรมการ", "กรรมการคนที่ 1", "กรรมการคนที่ 2", "กรรมการคนที่ 3"];
+
+// Global state variables
+let allDataFromSheet = [];
+let filteredData = [];
+let currentPage = 1;
+const ITEMS_PER_PAGE = 20;
+
+// DOM element references
+const competitionSelect = document.getElementById('competition-select');
+const resultsSection = document.getElementById('results-section');
+
+
+/**
+ * Fetches competitor data for the selected competition.
+ */
+async function fetchCompetitors() {
+  const competitionName = competitionSelect.value;
+  if (!competitionName) {
+    resultsSection.style.display = 'none';
+    return;
+  }
+
+  const scriptUrl = COMPETITION_SCRIPTS[competitionName];
+  if (!scriptUrl || scriptUrl === "PLACEHOLDER_URL") {
+      Swal.fire('ยังไม่พร้อมใช้งาน', `ยังไม่ได้ตั้งค่า Script สำหรับรายการ '${competitionName}'`, 'warning');
+      resultsSection.style.display = 'none';
+      return;
+  }
+
+  Swal.fire({ title: 'กำลังโหลดข้อมูล...', text: 'กรุณารอสักครู่', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+  try {
+    const response = await fetch(scriptUrl);
+    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+    
+    const result = await response.json();
+
+    if (result.success === false) {
+        throw new Error(result.message || 'Script reported an error');
+    }
+    
+    allDataFromSheet = result.data;
+    filteredData = allDataFromSheet; // Set filtered data to all data
+    document.getElementById('results-title').textContent = `ผลการแข่งขัน: ${competitionName}`;
+    resultsSection.style.display = 'block';
+    renderTablePage(1); // Render the table
+    Swal.close();
+  } catch (error) {
+    console.error('Fetch Competitors Error:', error);
+    Swal.fire('เกิดข้อผิดพลาด', `ไม่สามารถโหลดข้อมูลผู้เข้าแข่งขันได้: ${error.message}`, 'error');
+    resultsSection.style.display = 'none';
+  }
+}
+
+/**
+ * Renders a specific page of the results table.
+ * @param {number} page - The page number to render.
+ */
+function renderTablePage(page) {
+  currentPage = page;
+  const table = document.getElementById('results-table');
+  const thead = table.querySelector('thead');
+  const tbody = table.querySelector('tbody');
+  tbody.innerHTML = '';
+
+  if (filteredData.length === 0) {
+    thead.innerHTML = '';
+    tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center; padding: 20px;">ไม่พบข้อมูล</td></tr>';
+    renderPagination(0);
+    return;
+  }
+
+  const allHeaders = Object.keys(filteredData[0]);
+  const headersToShow = allHeaders.filter(h => !HEADERS_TO_HIDE.includes(h));
+  const scoreField = headersToShow.find(h => h.includes("คะแนน"));
+
+  // --- Sort and Rank the data ---
+  if (scoreField) {
+    filteredData.sort((a, b) => (parseFloat(b[scoreField]) || 0) - (parseFloat(a[scoreField]) || 0));
+    
+    let currentRank = 0;
+    let prevScore = -1;
+    let rankIncrement = 1;
+    filteredData.forEach((item) => {
+        const score = parseFloat(item[scoreField]) || 0;
+        if (score !== prevScore) {
+            currentRank += rankIncrement;
+            rankIncrement = 1;
+        } else {
+            rankIncrement++;
+        }
+        item.rank = currentRank; 
+        prevScore = score;
+    });
+  }
+  
+  // Add 'ลำดับ' (Rank) to the beginning of headers if it doesn't exist
+  if (scoreField && !headersToShow.includes('ลำดับ')) {
+      headersToShow.unshift('ลำดับ');
+  }
+
+  const start = (page - 1) * ITEMS_PER_PAGE;
+  const end = start + ITEMS_PER_PAGE;
+  const pageData = filteredData.slice(start, end);
+
+  thead.innerHTML = `<tr>${headersToShow.map(h => h !== 'rank' ? `<th>${h}</th>` : '').join('')}</tr>`;
+
+  pageData.forEach(row => {
+    const rank = row.rank;
+    let rowStyle = '';
+    if (scoreField) {
+        if (rank === 1) rowStyle = 'background: linear-gradient(to right, #FFD700, #FFFACD); font-weight: bold; color: #333;';
+        else if (rank === 2) rowStyle = 'background: linear-gradient(to right, #C0C0C0, #F5F5F5); font-weight: bold;';
+        else if (rank === 3) rowStyle = 'background: linear-gradient(to right, #CD7F32, #F5DEB3); font-weight: bold;';
+    }
+
+    const tr = document.createElement('tr');
+    tr.setAttribute('style', rowStyle);
+    
+    let rowHTML = '';
+    headersToShow.forEach(h => {
+        if (h === 'ลำดับ') {
+            rowHTML += `<td>${rank || ''}</td>`;
+        } else if (h !== 'rank') {
+            let val = row[h] || '';
+            
+            if (h === scoreField) {
+                const numericScore = parseFloat(val);
+                if (!isNaN(numericScore)) {
+                    val = numericScore.toFixed(2);
+                }
+            }
+            rowHTML += `<td>${val}</td>`;
+        }
+    });
+
+    tr.innerHTML = rowHTML;
+    tbody.appendChild(tr);
+  });
+
+  renderPagination(Math.ceil(filteredData.length / ITEMS_PER_PAGE));
+}
+
+/**
+ * Renders the pagination controls.
+ * @param {number} totalPages - The total number of pages.
+ */
+function renderPagination(totalPages) {
+  const controls = document.getElementById('pagination-controls');
+  controls.innerHTML = '';
+  if (totalPages <= 1) return;
+
+  controls.innerHTML = `
+    <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>&laquo; ย้อนกลับ</button>
+    <span>หน้า ${currentPage} / ${totalPages}</span>
+    <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>ถัดไป &raquo;</button>
+  `;
+}
+
+// --- Event Listeners ---
+window.changePage = (page) => renderTablePage(page);
+competitionSelect.addEventListener('change', fetchCompetitors);
+
+</script>
+</body>
+</html>
