@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Sarabun:wght@400;500;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <title>ประกาศผลการแข่งขันผลงานนวัตกรรม</title>
+    <style>
+        :root {
+            --primary-color: #2C3E50;
+            --secondary-color: #16A085; /* Teal Color for this page */
+            --background-color: #F4F6F9;
+            --card-background-color: #FFFFFF;
+            --text-color: #5D6D7E;
+            --title-color: #2C3E50;
+            --shadow-color: rgba(44, 62, 80, 0.1);
+            --border-color: #EAECEE;
+        }
+        html { box-sizing: border-box; }
+        *, *:before, *:after { box-sizing: inherit; }
+        body {
+            font-family: 'Sarabun', sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        .main-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        header {
+            background: linear-gradient(135deg, #E8F6F3, #16A085);
+            color: var(--primary-color);
+            text-align: center;
+            padding: 20px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+        }
+        .logo-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 15px;
+        }
+        .logo-container img {
+            height: 100px;
+            max-width: 100px;
+            object-fit: contain;
+        }
+        header h1 {
+            margin: 10px 0;
+            font-size: clamp(1.6rem, 4vw, 2.2rem);
+        }
+        .organizers {
+            font-size: clamp(1rem, 2.5vw, 1.2rem);
+            line-height: 1.5;
+        }
+        .content-card {
+            background-color: var(--card-background-color);
+            padding: 30px;
+            border-radius: 16px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+        .section-title {
+            font-size: 1.5em;
+            font-weight: 700;
+            margin: 0 0 20px;
+            color: var(--title-color);
+        }
+        .filter-controls {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            align-items: end;
+            margin-bottom: 20px;
+        }
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--title-color);
+        }
+        .input-field {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #BDC3C7;
+            border-radius: 8px;
+            font-size: 1em;
+            font-family: 'Sarabun', sans-serif;
+        }
+        .table-wrapper { overflow-x: auto; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+            font-size: 0.85em;
+        }
+        th, td {
+            padding: 9px 11px;
+            border: 1px solid var(--border-color);
+            text-align: left;
+            white-space: nowrap;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #F4F6F9;
+            font-weight: 600;
+            color: var(--title-color);
+        }
+        tbody tr:nth-of-type(even) { background-color: #FAFAFA; }
+        .pagination-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            margin-top: 1.5rem;
+        }
+        .pagination-controls button {
+            background-color: var(--secondary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 16px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .pagination-controls button:hover {
+            background-color: #117A65;
+        }
+        .pagination-controls button:disabled {
+            background-color: #BDC3C7;
+            cursor: not-allowed;
+        }
+        .back-button {
+            display: inline-block;
+            padding: 8px 16px;
+            background-color: var(--card-background-color);
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.2s;
+            box-shadow: 0 2px 5px var(--shadow-color);
+        }
+        .back-button:hover {
+            background-color: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 10px var(--shadow-color);
+        }
+    </style>
+</head>
+<body>
+<main class="main-container">
+    <header>
+        <div class="logo-container">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/96/%E0%B8%95%E0%B8%A3%E0%B8%B2%E0%B8%81%E0%B8%A3%E0%B8%B0%E0%B8%97%E0%B8%A3%E0%B8%A7%E0%B8%87%E0%B8%A8%E0%B8%B6%E0%B8%81%E0%B8%A9%E0%B8%B2%E0%B8%98%E0%B8%B4%E0%B8%81%E0%B8%B2%E0%B8%A3%E0%B9%84%E0%B8%97%E0%B8%A2.svg" alt="โลโก้กระทรวงศึกษาธิการ">
+            <img src="https://img2.pic.in.th/pic/-1-d31a1c311610bd82.png" alt="โลโก้ สพฐ.">
+        </div>
+        <h1>ประกาศผลการแข่งขันผลงานนวัตกรรม โครงการรักษ์ภาษาไทย</h1>
+        <div class="organizers">
+            สำนักงานศึกษาธิการจังหวัดร้อยเอ็ด<br>
+        สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต 1<br>
+        สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต 2<br>
+        สำนักงานเขตพื้นที่การศึกษาประถมศึกษาร้อยเอ็ด เขต 3
+        </div>
+    </header>
+
+    <div style="margin-bottom: 20px;">
+        <a href="index.html" class="back-button">
+            &larr; กลับหน้าหลัก
+        </a>
+    </div>
+
+    <section class="content-card">
+        <h2 class="section-title">เลือกประเภทผลงานนวัตกรรม</h2>
+        <div class="filter-controls">
+            <div class="form-group">
+                <label for="competition-select">เลือกประเภทผลงาน:</label>
+                <select id="competition-select" class="input-field">
+                    <option value="">-- กรุณาเลือกประเภท --</option>
+                    <option value="นวัตกรรมผู้บริหารสถานผู้บริหาร (รร.ขนาดใหญ่)">นวัตกรรมผู้บริหารสถานผู้บริหาร (รร.ขนาดใหญ่)</option>
+                    <option value="นวัตกรรมผู้บริหารสถานผู้บริหาร (รร.ขนาดเล็ก)">นวัตกรรมผู้บริหารสถานผู้บริหาร (รร.ขนาดเล็ก)</option>
+                    <option value="นวัตกรรมผู้บริหารสถานผู้บริหาร (รร.ขนาดกลาง)">นวัตกรรมผู้บริหารสถานผู้บริหาร (รร.ขนาดกลาง)</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่พิเศษ) ป.4-6">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่พิเศษ) ป.4-6</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่พิเศษ) ป.1-3">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่พิเศษ) ป.1-3</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่) ป.4-6">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่) ป.4-6</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่) ป.1-3">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่) ป.1-3</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดเล็ก) ม.1-ม.3">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดเล็ก) ม.1-ม.3</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดเล็ก) ป.4-ป.6">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดเล็ก) ป.4-ป.6</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดเล็ก) ป.1-ป.3">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดเล็ก) ป.1-ป.3</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดกลาง) ม.1-ม.3">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดกลาง) ม.1-ม.3</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดกลาง) ป.4-ป.6">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดกลาง) ป.4-ป.6</option>
+                    <option value="นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดกลาง) ป.1-ป.3">นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดกลาง) ป.1-ป.3</option>
+                </select>
+            </div>
+        </div>
+    </section>
+
+    <section id="results-section" class="content-card" style="display: none;">
+        <h2 id="results-title" class="section-title"></h2>
+        <div class="table-wrapper">
+            <table id="results-table">
+                <thead></thead>
+                <tbody></tbody>
+            </table>
+        </div>
+        <div id="pagination-controls" class="pagination-controls"></div>
+    </section>
+</main>
+
+<script>
+const COMPETITION_SCRIPTS = {
+    "นวัตกรรมผู้บริหารสถานผู้บริหาร (รร.ขนาดใหญ่)": "https://script.google.com/macros/s/AKfycbz3I2de_HhIAH3UodouVy6hmBboiDR2SSwt91aJDospBnrtIYlfgAy6nfZKyGSm7qI/exec", 
+    "นวัตกรรมผู้บริหารสถานผู้บริหาร (รร.ขนาดเล็ก)": "https://script.google.com/macros/s/AKfycbzUVo0K3Ib6ex5KnIUtLTpOI7ZTk5i6oWW2e9tN4UtIZvRcWE-_n_WCNI7NyJ63f0KsYQ/exec",
+    "นวัตกรรมผู้บริหารสถานผู้บริหาร (รร.ขนาดกลาง)": "https://script.google.com/macros/s/AKfycbwcp2dTFTTRlOK3ZeibI4vKAXWiQS1oNQM_TOQF9-T-I7V-HHUUe1nzBUfTm5plWV2j/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่พิเศษ) ป.4-6": "https://script.google.com/macros/s/AKfycbzdp4vttlxviiyZ5xNPKsiC-xuXJtrOlGkp5q2KJmsotuPEU-RaTzP9mqy_NkBzeTfoBQ/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่พิเศษ) ป.1-3": "https://script.google.com/macros/s/AKfycbwBwIv7jdAG6InIIP-HJwvReUgfLN0QJpN_8beIFVcsOlqjDVbKFe8m_RGdM_WSspPX/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่) ป.4-6": "https://script.google.com/macros/s/AKfycbwyiy8ezelk3zzqmGiXzuU-819vYkHEHIvck2SNVsDxBy9Oi1iDnf_zJbDBGhQ7oqgS/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดใหญ่) ป.1-3": "https://script.google.com/macros/s/AKfycbwBwIv7jdAG6InIIP-HJwvReUgfLN0QJpN_8beIFVcsOlqjDVbKFe8m_RGdM_WSspPX/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดเล็ก) ม.1-ม.3": "https://script.google.com/macros/s/AKfycbzbyc5eWK89zIN4LRVShTwsbCqfDmA1w8JUEqm_8IT3_i-sNIGikz7dFkco-3oBHPUQYn/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดเล็ก) ป.4-ป.6": "https://script.google.com/macros/s/AKfycbwu7Xy3Q1S545_otJGWH6ZvnxteaL37w4sxmBRLw-cr48ctMfvqbbdTguGrBdWU3hF4Mg/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดเล็ก) ป.1-ป.3": "https://script.google.com/macros/s/AKfycbxGU0O045sPECS-tFHglx1gPOSJlonu9OoubzuiyjI_HEpU4ide1SvpTRCglOFjduL66Q/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดกลาง) ม.1-ม.3": "https://script.google.com/macros/s/AKfycbwfJdyIuxTOLPEUAPtFpaQQS-7camDYDfQ6HS-M6fmYj54KAHgqVQCk7hl0AFx5x5M5zg/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดกลาง) ป.4-ป.6": "https://script.google.com/macros/s/AKfycbwmjkYmQzzhuMrUKkJOfXHtDrJRBojHKxq5Hl178ftXWqgNuuwvWUzUcMbRuUbkgO7W/exec",
+    "นวัตกรรมด้านการสอนครูผู้สอน (รร.ขนาดกลาง) ป.1-ป.3": "https://script.google.com/macros/s/AKfycby8Xa2S6-6eI8lrtU7BPYCMIMy9Aqu7B8aZwZU77ctcGEV010gSTRHGbzJhYw0Hi-xnuw/exec"
+};
+
+let currentData = [];
+let currentPage = 1;
+const ITEMS_PER_PAGE = 20;
+
+const competitionSelect = document.getElementById('competition-select');
+const resultsSection = document.getElementById('results-section');
+
+async function fetchAndDisplayResults() {
+    const competitionName = competitionSelect.value;
+    if (!competitionName) {
+        resultsSection.style.display = 'none';
+        return;
+    }
+
+    const scriptUrl = COMPETITION_SCRIPTS[competitionName];
+    if (!scriptUrl || scriptUrl.includes("YOUR_APPS_SCRIPT_URL_HERE")) {
+        Swal.fire('ยังไม่พร้อมใช้งาน', `ยังไม่ได้ตั้งค่า Script สำหรับรายการนี้`, 'warning');
+        resultsSection.style.display = 'none';
+        return;
+    }
+
+    Swal.fire({ title: 'กำลังโหลดข้อมูล...', allowOutsideClick: false, didOpen: () => Swal.showLoading() });
+
+    try {
+        const response = await fetch(scriptUrl);
+        const result = await response.json();
+        if (!result.success) throw new Error(result.message);
+        
+        currentData = result.data;
+        document.getElementById('results-title').textContent = `ผลการแข่งขัน: ${competitionName}`;
+        resultsSection.style.display = 'block';
+        renderTablePage(1);
+        Swal.close();
+    } catch (error) {
+        Swal.fire('เกิดข้อผิดพลาด', `ไม่สามารถโหลดข้อมูลได้: ${error.message}`, 'error');
+        resultsSection.style.display = 'none';
+    }
+}
+
+function renderTablePage(page) {
+    currentPage = page;
+    const table = document.getElementById('results-table');
+    const thead = table.querySelector('thead');
+    const tbody = table.querySelector('tbody');
+    tbody.innerHTML = '';
+
+    if (currentData.length === 0) {
+        thead.innerHTML = '';
+        tbody.innerHTML = '<tr><td colspan="100%" style="text-align:center;">ไม่พบข้อมูลสำหรับประเภทนี้</td></tr>';
+        renderPagination(0);
+        return;
+    }
+
+    const competitionName = competitionSelect.value;
+    const scoreField = "คะแนน";
+    
+    const isDirectorCompetition = competitionName.includes("นวัตกรรมผู้บริหาร");
+    // --- จุดที่แก้ไข: ตรวจสอบว่ามีคะแนนหรือไม่ โดยไม่ขึ้นกับประเภทการแข่งขัน ---
+    const hasScore = Object.keys(currentData[0]).includes(scoreField);
+
+    if (hasScore) {
+        currentData.sort((a, b) => (parseFloat(b[scoreField]) || 0) - (parseFloat(a[scoreField]) || 0));
+    }
+
+    const allHeaders = Object.keys(currentData[0]);
+    const headersToHide = [
+        "Timestamp", "Competition Type", "Phone Number", "File URL", "Innovation Name",
+        "ลำดับที่", "รหัส", "เครือข่าย", "อำเภอ", "ลงชื่อกรรมการ", 
+        "กรรมการคนที่ 1", "กรรมการคนที่ 2", "กรรมการคนที่ 3",
+        // --- จุดที่แก้ไข: ซ่อนคะแนนถ้าเป็นของผู้บริหาร ---
+        ...(isDirectorCompetition ? [scoreField] : [])
+    ];
+    let headersToShow = allHeaders.filter(h => !headersToHide.includes(h));
+    
+    // --- จุดที่แก้ไข: เพิ่มคอลัมน์ลำดับเสมอถ้ามีคะแนน ---
+    if (hasScore) {
+        headersToShow.unshift('ลำดับ');
+    }
+    
+    thead.innerHTML = `<tr>${headersToShow.map(h => `<th>${h.replace('Full Name', 'ชื่อ-นามสกุล').replace('School Name', 'โรงเรียน').replace('Grade Level', 'ระดับชั้น').replace('School Size', 'ขนาด').replace('Area Office', 'เขตพื้นที่')}</th>`).join('')}</tr>`;
+
+    const start = (page - 1) * ITEMS_PER_PAGE;
+    const end = start + ITEMS_PER_PAGE;
+    const pageData = currentData.slice(start, end);
+
+    pageData.forEach((row, index) => {
+        const tr = document.createElement('tr');
+        
+        let rank = start + index + 1;
+        if(hasScore) {
+            const originalIndex = currentData.findIndex(item => item === row);
+            rank = originalIndex + 1;
+        }
+
+        let rowHTML = '';
+        headersToShow.forEach(h => {
+            if (h === 'ลำดับ') {
+                rowHTML += `<td>${rank}</td>`;
+            } else {
+                let val = row[h] || '';
+                if (h === scoreField) {
+                    const numericScore = parseFloat(val);
+                    if (!isNaN(numericScore)) {
+                        val = numericScore.toFixed(2);
+                    }
+                }
+                rowHTML += `<td>${val}</td>`;
+            }
+        });
+
+        tr.innerHTML = rowHTML;
+        tbody.appendChild(tr);
+    });
+
+    renderPagination(Math.ceil(currentData.length / ITEMS_PER_PAGE));
+}
+
+function renderPagination(totalPages) {
+    const controls = document.getElementById('pagination-controls');
+    controls.innerHTML = '';
+    if (totalPages <= 1) return;
+
+    controls.innerHTML = `
+        <button onclick="changePage(${currentPage - 1})" ${currentPage === 1 ? 'disabled' : ''}>&laquo; ย้อนกลับ</button>
+        <span>หน้า ${currentPage} / ${totalPages}</span>
+        <button onclick="changePage(${currentPage + 1})" ${currentPage === totalPages ? 'disabled' : ''}>ถัดไป &raquo;</button>
+    `;
+}
+
+window.changePage = (page) => renderTablePage(page);
+competitionSelect.addEventListener('change', fetchAndDisplayResults);
+
+</script>
+</body>
+</html>
